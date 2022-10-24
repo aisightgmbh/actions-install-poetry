@@ -1,0 +1,36 @@
+name: Create dummy Poetry project
+description: Create a dummy Poetry project to test the install-poetry action
+
+runs:
+  using: composite
+  steps:
+    - run: |
+        cat <<EOF > pyproject.toml
+        [tool.poetry]
+        name = "dummy-project"
+        version = "0.1.0"
+        description = ""
+        authors = ["Tilman Krokotsch <tilman@aisight.de>"]
+        
+        [tool.poetry.dependencies]
+        python = "^3.9"
+        
+        [tool.poetry.dev-dependencies]
+        
+        [build-system]
+        requires = ["poetry-core>=1.0.0"]
+        build-backend = "poetry.core.masonry.api"
+        EOF
+      shell: bash
+    - run: |
+        cat <<EOF > poetry.lock
+        package = []
+
+        [metadata]
+        lock-version = "1.1"
+        python-versions = "^3.9"
+        content-hash = "ce2aa767160f871dd3652615ba0a0dceb7733d62eb8cb4665b87f30a562e3adf"
+
+        [metadata.files]
+        EOF
+      shell: bash

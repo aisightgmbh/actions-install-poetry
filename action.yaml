@@ -1,0 +1,50 @@
+name: "poetry install"
+description: "Set up python, poetry and install dependencies"
+inputs:
+  poetry-version:
+    description: "poetry version"
+    required: true
+  python-version:
+    description: "python version"
+    required: true
+  artifactory-owner:
+    description: "owner of AWS CodeArtifact artifactory"
+    default: ""
+  artifactory-domain:
+    description: "domain of AWS CodeArtifact artifactory"
+    default: ""
+runs:
+  using: "composite"
+  steps:
+    - name: Install venv
+      if: ${{ runner.name != 'Hosted Agent' }}
+      run: sudo apt-get update && sudo apt-get install python3-venv -y
+      shell: bash
+
+    - name: Install pipx
+      if: ${{ runner.name != 'Hosted Agent' }}
+      run: |
+        pip install --user pipx
+        pipx ensurepath
+      shell: bash
+
+    - name: Install poetry
+      run: pipx install poetry==${{ inputs.poetry-version }}
+      shell: bash
+
+    - name: Connect to artifactory
+      if: ${{ inputs.artifactory-owner != '' && inputs.artifactory-domain != '' }}
+      uses: aisightgmbh/actions-connect-artifactory-pull@v1
+      with:
+        artifactory-owner: ${{ inputs.artifactory-owner }}
+        artifactory-domain: ${{ inputs.artifactory-domain }}
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ inputs.python-version }}
+        cache: "poetry"
+
+    - name: Install dependencies
+      run: poetry install
+      shell: bash
