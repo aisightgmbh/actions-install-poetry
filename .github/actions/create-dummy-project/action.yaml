@@ -14,6 +14,10 @@ runs:
         
         [tool.poetry.dependencies]
         python = "^3.9"
+        mock = { version = "^5.0.2", optional = true }
+        
+        [tool.poetry.extras]
+        mock = ["mock"]
         
         [tool.poetry.dev-dependencies]
         
@@ -24,13 +28,29 @@ runs:
       shell: bash
     - run: |
         cat <<EOF > poetry.lock
-        package = []
-
+        [[package]]
+        name = "mock"
+        version = "5.0.2"
+        description = "Rolling backport of unittest.mock for all Pythons"
+        optional = true
+        python-versions = ">=3.6"
+        files = [
+        {file = "mock-5.0.2-py3-none-any.whl", hash = "sha256:0e0bc5ba78b8db3667ad636d964eb963dc97a59f04c6f6214c5f0e4a8f726c56"},
+        {file = "mock-5.0.2.tar.gz", hash = "sha256:06f18d7d65b44428202b145a9a36e99c2ee00d1eb992df0caf881d4664377891"},
+        ]
+        
+        [package.extras]
+        build = ["blurb", "twine", "wheel"]
+        docs = ["sphinx"]
+        test = ["pytest", "pytest-cov"]
+        
+        [extras]
+        mock = ["mock"]
+        
         [metadata]
-        lock-version = "1.1"
+        lock-version = "2.0"
         python-versions = "^3.9"
-        content-hash = "ce2aa767160f871dd3652615ba0a0dceb7733d62eb8cb4665b87f30a562e3adf"
-
-        [metadata.files]
+        content-hash = "585a3ddbbd7a0b1b6b66c7da33ecd3d20c26a8a14f6b0d21337296a8c9c70329"
+        
         EOF
       shell: bash

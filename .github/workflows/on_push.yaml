@@ -12,3 +12,15 @@ jobs:
           poetry-version: "1.1.14"
           python-version: "3.9"
       - run: poetry --version
+
+  test-with-extras:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/create-dummy-project
+      - uses: aisightgmbh/actions-install-poetry@master
+        with:
+          poetry-version: "1.1.14"
+          python-version: "3.9"
+          install-extras: "true"
+      - run: poetry run python -c "import mock"

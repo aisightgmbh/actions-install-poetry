@@ -13,6 +13,9 @@ inputs:
   artifactory-domain:
     description: "domain of AWS CodeArtifact artifactory"
     default: ""
+  install-extras:
+    description: "use --all-extras to install optional extras of the package"
+    default: "false"
 runs:
   using: "composite"
   steps:
@@ -47,4 +50,8 @@ runs:
 
     - name: Install dependencies
       run: poetry install
+      shell: bash
+
+    - name: Install dependencies with extras
+      run: poetry install ${{ (inputs.install-extras != 'false') && '--all-extras' || '' }}
       shell: bash
