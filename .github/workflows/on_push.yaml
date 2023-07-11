@@ -24,3 +24,23 @@ jobs:
           python-version: "3.9"
           install-extras: "true"
       - run: poetry run python -c "import mock"
+
+  test-with-groups:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/create-dummy-project
+      - uses: aisightgmbh/actions-install-poetry@master
+        with:
+          poetry-version: "1.5.1"
+          python-version: "3.9"
+          install-groups: "opt1,opt2"
+      - run: poetry run python -c "import PIL"
+      - run: poetry run python -c "import flake8"
+      - run: |
+          set -e
+          if poetry run python -c "import gitlint"; then
+            exit 1
+          else
+            exit 0
+          fi

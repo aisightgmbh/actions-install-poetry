@@ -16,6 +16,9 @@ inputs:
   install-extras:
     description: "use --all-extras to install optional extras of the package"
     default: "false"
+  install-groups:
+    description: "use --with to install the groups specified as a comma-separated list"
+    default: ""
 runs:
   using: "composite"
   steps:
@@ -53,5 +56,5 @@ runs:
       shell: bash
 
     - name: Install dependencies with extras
-      run: poetry install ${{ (inputs.install-extras != 'false') && '--all-extras' || '' }}
+      run: poetry install ${{ (inputs.install-extras != 'false') && '--all-extras' || '' }} ${{ inputs.install-groups && format('--with {0}', inputs.install-groups) || '' }}
       shell: bash
