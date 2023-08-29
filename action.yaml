@@ -24,13 +24,13 @@ runs:
   steps:
     - name: Install venv
       if: ${{ runner.name != 'Hosted Agent' }}
-      run: sudo apt-get update && sudo apt-get install python3-venv -y
+      run: sudo apt-get -qq update && sudo apt-get install python3-venv -y
       shell: bash
 
     - name: Install pipx
       if: ${{ runner.name != 'Hosted Agent' }}
       run: |
-        pip install --user pipx
+        pip install --quiet --user pipx
         pipx ensurepath
       shell: bash
 
@@ -61,10 +61,6 @@ runs:
       with:
         python-version: ${{ inputs.python-version }}
         cache: "poetry"
-
-    - name: Install dependencies
-      run: poetry install
-      shell: bash
 
     - name: Install dependencies with extras
       run: poetry install ${{ (inputs.install-extras != 'false') && '--all-extras' || '' }} ${{ inputs.install-groups && format('--with {0}', inputs.install-groups) || '' }}
