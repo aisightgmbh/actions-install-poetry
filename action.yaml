@@ -38,12 +38,23 @@ runs:
       run: pipx install poetry==${{ inputs.poetry-version }}
       shell: bash
 
+    - name: Check for AWS CLI
+      run: |
+        if ! command -v aws &> /dev/null
+        then
+          echo "INSTALL_AWS=true" >> $GITHUB_ENV
+        else
+          echo "INSTALL_AWS=false" >> $GITHUB_ENV
+        fi
+      shell: bash
+
     - name: Connect to artifactory
       if: ${{ inputs.artifactory-owner != '' && inputs.artifactory-domain != '' }}
       uses: aisightgmbh/actions-connect-artifactory-pull@v1
       with:
         artifactory-owner: ${{ inputs.artifactory-owner }}
         artifactory-domain: ${{ inputs.artifactory-domain }}
+        install-aws: ${{ env.INSTALL_AWS }}
 
     - name: Set up Python
       uses: actions/setup-python@v4
